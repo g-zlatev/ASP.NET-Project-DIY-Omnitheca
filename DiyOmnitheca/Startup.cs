@@ -1,6 +1,7 @@
 namespace DiyOmnitheca
 {
     using DiyOmnitheca.Data;
+    using DiyOmnitheca.Infrastructure;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ namespace DiyOmnitheca
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDbContext<ApplicationDbContext>(options => options
+                .AddDbContext<OmnithecaDbContext>(options => options
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -34,7 +35,7 @@ namespace DiyOmnitheca
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                 })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<OmnithecaDbContext>();
 
             services
                 .AddControllersWithViews();
@@ -43,6 +44,8 @@ namespace DiyOmnitheca
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.PrepareDatabase();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,6 +70,7 @@ namespace DiyOmnitheca
                 //    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
         }
     }
 }
