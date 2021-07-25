@@ -23,10 +23,10 @@ namespace DiyOmnitheca.Data.Models
         [MaxLength(ProductDescriptionMaxLength)]
         public string Description { get; set; }
 
-        [Required]
+        //[Required]
         public string Owner { get; init; }  //TODO: change to relevant User class
 
-        [Required]
+        //[Required]
         public string Borrower { get; set; } //TODO: change to relevant User class
 
 
@@ -47,11 +47,11 @@ namespace DiyOmnitheca.Data.Models
         [Required]
         public string ImageUrl { get; set; }
 
-        public IEnumerable<Category> Categories { get; init; } = new List<Category>();
+        //public IEnumerable<Category> Categories { get; init; } = new List<Category>();
 
-        //public int CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
-        //public Category Category { get; init; }
+        public Category Category { get; init; }
 
     }
 

@@ -19,21 +19,21 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Product>()
-                .HasMany(c => c.Categories)
-                .WithMany(p => p.Products)
-                .UsingEntity<Dictionary<string, object>>(
-                "ProductCategories",
-                c => c.HasOne<Category>().WithMany().OnDelete(DeleteBehavior.Restrict),
-                c => c.HasOne<Product>().WithMany().OnDelete(DeleteBehavior.Restrict));
-
-
-            //builder
-            //    .Entity<Product>()
-            //    .HasOne(c => c.Category)
+            //builder.Entity<Product>()
+            //    .HasMany(c => c.Categories)
             //    .WithMany(p => p.Products)
-            //    .HasForeignKey(c => c.CategoryId)
-            //    .OnDelete(DeleteBehavior.Restrict);
+            //    .UsingEntity<Dictionary<string, object>>(
+            //    "ProductCategories",
+            //    c => c.HasOne<Category>().WithMany().OnDelete(DeleteBehavior.Restrict),
+            //    c => c.HasOne<Product>().WithMany().OnDelete(DeleteBehavior.Restrict));
+
+
+            builder
+                .Entity<Product>()
+                .HasOne(c => c.Category)
+                .WithMany(p => p.Products)
+                .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }
