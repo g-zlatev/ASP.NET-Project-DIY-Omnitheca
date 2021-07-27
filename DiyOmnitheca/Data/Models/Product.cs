@@ -39,10 +39,10 @@ namespace DiyOmnitheca.Data.Models
         public decimal LendingPrice { get; set; }
 
 
-        public DateTime BorrowedOnDate { get; set; }
+        public DateTime? BorrowedOnDate { get; set; }
 
 
-        public DateTime BorrowedUntilDate { get; set; }
+        public DateTime? BorrowedUntilDate { get; set; }
 
         [Required]
         public string ImageUrl { get; set; }

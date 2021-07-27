@@ -23,8 +23,9 @@
         [StringLength(ProductLocationMaxLength, MinimumLength = ProductLocationMinLength)]
         public string Location { get; init; }
 
-        [Range(0.00, ProductRentCostMaxValue)]
-        public decimal LendingPrice { get; init; }
+        [Range(0, ProductRentCostMaxValue)]
+        [DataType(DataType.Currency)]
+        public double LendingPrice { get; init; }
 
         [Required]
         [Display(Name = "Image URL")]
