@@ -26,7 +26,6 @@
             if (!this.data.Categories.Any(c => c.Id == product.CategoryId))
             {
                 this.ModelState.AddModelError(nameof(product.CategoryId), "Category does not exist!");
-
             }
 
             if (!ModelState.IsValid)
