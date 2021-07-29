@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ProductListingViewModel>
+
+<div class="card-group">
+    @foreach (var product in Model)
+    {
+        <div class="card" style="width: 18rem; outline-offset: 10px">
+            <img class="card-img-top" width: 50%; height: 5vw; object-fit: cover; src="@product.ImageUrl" alt="@product.Brand @product.Name">
+            <div class="card-body">
+                <h5 class="card-title">@product.Brand @product.Name</h5>
+                <p class="card-text">@product.Description</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@product.Location</li>
+                <li class="list-group-item">@product.Category</li>
+                <li class="list-group-item">@product.LendingPrice lv.</li>
+            </ul>
+            <div class="card-body">
+                <a href="#" class="btn btn-primary">Details</a>
+            </div>
+        </div>
+    }
+</div>
+
