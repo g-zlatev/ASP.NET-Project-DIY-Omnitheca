@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<ProductListingViewModel>
 
+@{ 
+    string ShortenDescription(string input)
+    {
+        return input.Length > 100 ? input.Substring(0, 100) + "..." : input;
+    }
+}
+
 <div class="card-group">
     @foreach (var product in Model)
     {
@@ -7,7 +14,7 @@
             <img class="card-img-top" width: 50%; height: 5vw; object-fit: cover; src="@product.ImageUrl" alt="@product.Brand @product.Name">
             <div class="card-body">
                 <h5 class="card-title">@product.Brand @product.Name</h5>
-                <p class="card-text">@product.Description</p>
+                <p class="card-text">@ShortenDescription(product.Description)</p>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">@product.Location</li>
@@ -15,7 +22,7 @@
                 <li class="list-group-item">@product.LendingPrice lv.</li>
             </ul>
             <div class="card-body">
-                <a href="#" class="btn btn-primary">Details</a>
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">Details</a>
             </div>
         </div>
     }
