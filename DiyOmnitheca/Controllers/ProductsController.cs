@@ -20,10 +20,18 @@
             Categories = this.GetProductCategories()
         });
 
-        public IActionResult All()
+        public IActionResult All(string searchTerm)
         {
-            var products = this.data
-                .Products
+            var productsQuery = this.data.Products.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                productsQuery = productsQuery.Where(p =>
+                (p.Brand + " " + p.Name).ToLower().Contains(searchTerm.ToLower()) ||
+                p.Description.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            var products = productsQuery
                 .OrderByDescending(p => p.Id)
                 .Select(p => new ProductListingViewModel
                 {
@@ -38,7 +46,11 @@
                 })
                 .ToList();
 
-            return View(products);
+            return View(new AllProductsQueryModel
+            {
+                Products = products,
+                SearchTerm = searchTerm
+            });
         }
 
         [HttpPost]
