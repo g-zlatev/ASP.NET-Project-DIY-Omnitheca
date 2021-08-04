@@ -11,10 +11,10 @@
     @foreach (var product in Model)
     {
         <div class="card" style="width: 18rem; outline-offset: 10px">
-            <img class="card-img-top" width: 50%; height: 5vw; object-fit: cover; src="@product.ImageUrl" alt="@product.Brand @product.Name">
-            <div class="card-body">
+            <img class="card-img-top" style="width: 100%; height: 10vw; object-fit: scale-down;"  src="@product.ImageUrl" alt="@product.Brand @product.Name">
+            <div class="card-body col-sm-12 col-md-12 col-lg-12" style="height: 15vw">
                 <h5 class="card-title">@product.Brand @product.Name</h5>
-                <p class="card-text">@ShortenDescription(product.Description)</p>
+                <p class="card-text d-sm-none d-md-block">@ShortenDescription(product.Description)</p>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">@product.Location</li>

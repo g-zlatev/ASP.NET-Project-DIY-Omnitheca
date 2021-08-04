@@ -32,6 +32,8 @@
     </div>
 }
 
+<div class="mb-5"></div>
+
 <div id="carouselExampleControls" class="carousel slide w-75 h-25 offset-2" data-ride="carousel">
     <div class="carousel-inner">
         @if (firstProduct != null)
@@ -74,4 +76,18 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
     </a>
+</div>
+
+<div class="jumbotron mt-4">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            @Model.TotalProducts Products
+        </div>
+        <div class="col-md-4 text-center">
+            @Model.TotalUsers Users 
+        </div>
+        <div class="col-md-4 text-center">
+            @Model.TotalRents Rents
+        </div>
+    </div>
 </div>
