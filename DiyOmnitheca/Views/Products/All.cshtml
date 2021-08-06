@@ -8,17 +8,34 @@
 }
 <form method="get">
     <div class="row">
+        <div class="form-group col-md-3">
+            <div class="form-group">
+                <label asp-for="Brand">Filter by Brand</label>
+                <select asp-for="Brand" class="form-control">
+                    <option value="">All Products</option>
+
+                    @foreach (var brand in Model.Brands)
+                    {
+                        <option value="@brand">@brand</option>
+                    }
+                </select>
+            </div>
+        </div>
+
         <div class="form-group col-md-4 mb-5">
             <label asp-for="SearchTerm">Search</label>
             <input asp-for="SearchTerm" class="form-control" placeholder="Enter search terms and press Enter...">
         </div>
 
         <div class="form-group col-md-3">
-
-        </div>
-
-        <div class="form-group col-md-3">
-
+            <div class="form-group">
+                <label asp-for="Sorting">Sort products by:</label>
+                <select asp-for="Sorting" class="form-control">
+                    <option value="0" selected>Date Created</option>
+                    <option value="1">Price</option>
+                    <option value="2">Brand and Name</option>
+                </select>
+            </div>
         </div>
     </div>
 </form>

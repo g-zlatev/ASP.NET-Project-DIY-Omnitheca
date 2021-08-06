@@ -15,24 +15,32 @@
         public ProductsController(OmnithecaDbContext data)
             => this.data = data;
 
-        public IActionResult Add() => View(new AddProductFormModel
-        {
-            Categories = this.GetProductCategories()
-        });
 
-        public IActionResult All(string searchTerm)
+        public IActionResult All([FromQuery]AllProductsQueryModel query)
         {
             var productsQuery = this.data.Products.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (!string.IsNullOrWhiteSpace(query.Brand))
             {
                 productsQuery = productsQuery.Where(p =>
-                (p.Brand + " " + p.Name).ToLower().Contains(searchTerm.ToLower()) ||
-                p.Description.ToLower().Contains(searchTerm.ToLower()));
+                p.Brand == query.Brand);
             }
 
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            {
+                productsQuery = productsQuery.Where(p =>
+                (p.Brand + " " + p.Name).ToLower().Contains(query.SearchTerm.ToLower()) ||
+                p.Description.ToLower().Contains(query.SearchTerm.ToLower()));
+            }
+
+            productsQuery = query.Sorting switch
+            {
+                ProductSorting.Price => productsQuery.OrderByDescending(p => p.LendingPrice),
+                ProductSorting.BrandAndName => productsQuery.OrderBy(p => p.Brand).ThenBy(p => p.Name),
+                ProductSorting.DateCreated or _ => productsQuery.OrderByDescending(p => p.Id)
+            };
+
             var products = productsQuery
-                .OrderByDescending(p => p.Id)
                 .Select(p => new ProductListingViewModel
                 {
                     Id = p.Id,
@@ -46,12 +54,23 @@
                 })
                 .ToList();
 
-            return View(new AllProductsQueryModel
-            {
-                Products = products,
-                SearchTerm = searchTerm
-            });
+            var productBrands = this.data
+                .Products
+                .Select(p => p.Brand)
+                .Distinct()
+                .ToList();
+
+            query.Brands = productBrands;
+            query.Products = products;
+
+            return View(query);
         }
+
+
+        public IActionResult Add() => View(new AddProductFormModel
+        {
+            Categories = this.GetProductCategories()
+        });
 
         [HttpPost]
         public IActionResult Add(AddProductFormModel product)

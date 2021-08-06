@@ -4,12 +4,14 @@
 
     public class AllProductsQueryModel
     {
-        public IEnumerable<string> Brands { get; init; }
+        public string Brand { get; init; }
 
         public string SearchTerm { get; init; }
 
         public ProductSorting Sorting { get; init; }
 
-        public IEnumerable<ProductListingViewModel> Products { get; init; }
+        public IEnumerable<string> Brands { get; set; }
+
+        public IEnumerable<ProductListingViewModel> Products { get; set; }
     }
 }
