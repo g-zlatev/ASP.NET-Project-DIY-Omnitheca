@@ -1,6 +1,10 @@
 ﻿@model AllProductsQueryModel
 
 @{
+    ViewData["Title"] = "All Products";
+}
+
+@{
     string ShortenDescription(string input)
     {
         return input.Length > 100 ? input.Substring(0, 100) + "..." : input;
@@ -8,7 +12,7 @@
 }
 <form method="get">
     <div class="row">
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <div class="form-group">
                 <label asp-for="Brand">Filter by Brand</label>
                 <select asp-for="Brand" class="form-control">
@@ -27,7 +31,7 @@
             <input asp-for="SearchTerm" class="form-control" placeholder="Enter search terms and press Enter...">
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <div class="form-group">
                 <label asp-for="Sorting">Sort products by:</label>
                 <select asp-for="Sorting" class="form-control">
@@ -45,7 +49,7 @@
     {
         <div class="card" style="width: 18rem; outline-offset: 10px">
             <img class="card-img-top" style="width: 100%; height: 10vw; object-fit: scale-down;" src="@product.ImageUrl" alt="@product.Brand @product.Name">
-            <div class="card-body col-sm-12 col-md-12 col-lg-12" style="height: 15vw">
+            <div class="card-body col-sm-12 col-md-12 col-lg-12" style="height: 10vw">
                 <h5 class="card-title">@product.Brand @product.Name</h5>
                 <p class="card-text d-sm-none d-md-block">@ShortenDescription(product.Description)</p>
             </div>
@@ -61,3 +65,36 @@
     }
 </div>
 
+@{
+    var previousPage = Model.CurrentPage - 1;
+    if (previousPage < 1)
+    {
+        previousPage = 1;
+    }
+
+    var totalPages = Math.Ceiling((double)Model.TotalProducts / AllProductsQueryModel.ProductsPerPage);
+}
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination mt-3">
+        <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : string.Empty)">
+            <a class="page-link"
+               asp-controller="Products"
+               asp-action="All"
+               asp-route-CurrentPage="@previousPage"
+               asp-route-Brand="@Model.Brand"
+               asp-route-SearchTerm="@Model.SearchTerm"
+               asp-route-Sorting="@((int)Model.Sorting)">Previous</a>
+        </li>
+        <li class="page-item disabled"><a class="page-link" href="#">Current page: @Model.CurrentPage</a></li>
+        <li class="page-item @(Model.CurrentPage >= totalPages ? "disabled" : string.Empty)">
+            <a class="page-link"
+               asp-controller="Products"
+               asp-action="All"
+               asp-route-CurrentPage="@(Model.CurrentPage +1)"
+               asp-route-Brand="@Model.Brand"
+               asp-route-SearchTerm="@Model.SearchTerm"
+               asp-route-Sorting="@((int)Model.Sorting)">Next</a>
+        </li>
+    </ul>
+</nav>

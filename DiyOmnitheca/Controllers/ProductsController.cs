@@ -1,6 +1,5 @@
 ﻿namespace DiyOmnitheca.Controllers
 {
-    using System;
     using System.Linq;
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
@@ -40,7 +39,11 @@
                 ProductSorting.DateCreated or _ => productsQuery.OrderByDescending(p => p.Id)
             };
 
+            var totalProducts = productsQuery.Count();
+
             var products = productsQuery
+                .Skip((query.CurrentPage - 1) * AllProductsQueryModel.ProductsPerPage)
+                .Take(AllProductsQueryModel.ProductsPerPage)
                 .Select(p => new ProductListingViewModel
                 {
                     Id = p.Id,
@@ -60,6 +63,7 @@
                 .Distinct()
                 .ToList();
 
+            query.TotalProducts = totalProducts;
             query.Brands = productBrands;
             query.Products = products;
 
