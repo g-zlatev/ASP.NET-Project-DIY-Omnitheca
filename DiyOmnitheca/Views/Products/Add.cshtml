@@ -1,7 +1,7 @@
 ﻿@model AddProductFormModel
 
 @{
-    ViewData["Title"] = "Add Product";
+    ViewBag.Title = "Add Product";
 }
 
 
@@ -9,7 +9,7 @@
     <div class="row">
 
         <div class="col-lg-6 col-sm-12">
-            <h2 class="heading-margin">Add Product</h2>
+            <h2 class="heading-margin">@ViewBag.Title</h2>
 
             <form method="post">
                 <div class="form-group">
@@ -53,7 +53,7 @@
                     <span asp-validation-for="CategoryId" class="small text-danger"></span>
                 </div>
 
-                <input class="btn btn-primary" type="submit" value="Add" />
+                <input class="btn btn-primary mt-3" type="submit" value="Add" />
             </form>
         </div>
     </div>

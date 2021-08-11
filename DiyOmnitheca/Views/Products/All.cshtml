@@ -1,7 +1,7 @@
 ﻿@model AllProductsQueryModel
 
 @{
-    ViewData["Title"] = "All Products";
+    ViewBag.Title = "All Products";
 }
 
 @{
@@ -10,13 +10,15 @@
         return input.Length > 100 ? input.Substring(0, 100) + "..." : input;
     }
 }
+
+
 <form method="get">
     <div class="row">
         <div class="form-group col-md-4">
             <div class="form-group">
                 <label asp-for="Brand">Filter by Brand</label>
                 <select asp-for="Brand" class="form-control">
-                    <option value="">All Products</option>
+                    <option value="">@ViewBag.Title</option>
 
                     @foreach (var brand in Model.Brands)
                     {
@@ -64,6 +66,12 @@
         </div>
     }
 </div>
+
+
+@if (!Model.Products.Any())
+{
+    <h2 class="text-center">No products to show currently!</h2>
+}
 
 @{
     var previousPage = Model.CurrentPage - 1;

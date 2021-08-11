@@ -3,9 +3,11 @@
     using System.Linq;
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using DiyOmnitheca.Data;
     using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Models.Products;
+    using DiyOmnitheca.Infrastructure;
 
     public class ProductsController : Controller
     {
@@ -15,7 +17,7 @@
             => this.data = data;
 
 
-        public IActionResult All([FromQuery]AllProductsQueryModel query)
+        public IActionResult All([FromQuery] AllProductsQueryModel query)
         {
             var productsQuery = this.data.Products.AsQueryable();
 
@@ -70,15 +72,35 @@
             return View(query);
         }
 
-
-        public IActionResult Add() => View(new AddProductFormModel
+        [Authorize]
+        public IActionResult Add()
         {
-            Categories = this.GetProductCategories()
-        });
+            if (!this.UserIsLender())
+            {
+                return RedirectToAction(nameof(LendersController.Become), "Lenders");
+            }
+
+            return View(new AddProductFormModel
+            {
+                Categories = this.GetProductCategories()
+            });
+        }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Add(AddProductFormModel product)
         {
+            var lenderId = this.data
+                .Lenders
+                .Where(l => l.UserId == this.User.GetId())
+                .Select(l => l.Id)
+                .FirstOrDefault();
+
+            if (lenderId == 0)
+            {
+                return RedirectToAction(nameof(LendersController.Become), "Lenders");
+            }
+
             if (!this.data.Categories.Any(c => c.Id == product.CategoryId))
             {
                 this.ModelState.AddModelError(nameof(product.CategoryId), "Category does not exist!");
@@ -99,7 +121,8 @@
                 ImageUrl = product.ImageUrl,
                 LendingPrice = (decimal)product.LendingPrice,
                 Location = product.Location,
-                CategoryId = product.CategoryId                
+                CategoryId = product.CategoryId,
+                LenderId = lenderId
             };
 
             this.data.Products.Add(productData);
@@ -108,7 +131,10 @@
             return RedirectToAction(nameof(All));
         }
 
-        
+        private bool UserIsLender()
+            => this.data
+                .Lenders
+                .Any(l => l.UserId == this.User.GetId());
 
         private IEnumerable<ProductCategoryViewModel> GetProductCategories()
             => this.data

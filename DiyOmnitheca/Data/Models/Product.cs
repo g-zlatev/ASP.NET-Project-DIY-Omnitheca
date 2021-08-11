@@ -51,7 +51,7 @@ namespace DiyOmnitheca.Data.Models
         //[Required]
         public Lender Lender { get; init; }  //TODO: change to relevant User class
 
-        public int BorrowerId { get; set; }
+        public int? BorrowerId { get; set; }
         //[Required]
         public Borrower Borrower { get; set; } //TODO: change to relevant User class
 

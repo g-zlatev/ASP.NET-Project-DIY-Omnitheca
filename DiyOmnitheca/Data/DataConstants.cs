@@ -22,8 +22,11 @@ namespace DiyOmnitheca.Data
 
         public class Person
         {
+            public const int PersonNameMinLength = 2;
             public const int PersonNameMaxLength = 30;
+            public const int PhoneNumberMinLength = 6;
             public const int PhoneNumberMaxLength = 20;
+
         }
 
     }
