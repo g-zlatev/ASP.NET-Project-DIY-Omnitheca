@@ -1,11 +1,11 @@
 ﻿
 namespace DiyOmnitheca.Data.Models
 {
+    using Microsoft.AspNetCore.Identity;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using static DataConstants;
+    using static DataConstants.Product;
 
     public class Product
     {
@@ -22,13 +22,6 @@ namespace DiyOmnitheca.Data.Models
         [Required]
         [MaxLength(ProductDescriptionMaxLength)]
         public string Description { get; set; }
-
-        //[Required]
-        public string Owner { get; init; }  //TODO: change to relevant User class
-
-        //[Required]
-        public string Borrower { get; set; } //TODO: change to relevant User class
-
 
         [Required]
         [MaxLength(ProductLocationMaxLength)]
@@ -52,6 +45,15 @@ namespace DiyOmnitheca.Data.Models
         public int CategoryId { get; set; }
 
         public Category Category { get; init; }
+
+        public int LenderId { get; init; }
+
+        //[Required]
+        public Lender Lender { get; init; }  //TODO: change to relevant User class
+
+        public int BorrowerId { get; set; }
+        //[Required]
+        public Borrower Borrower { get; set; } //TODO: change to relevant User class
 
     }
 
