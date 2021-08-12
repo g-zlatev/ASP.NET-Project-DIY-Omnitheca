@@ -15,9 +15,10 @@
            => this.data = data;
 
 
-        public IActionResult Index() 
+        public IActionResult Index()
         {
             var totalProducts = this.data.Products.Count();
+            var totalUsers = this.data.Users.Count();
 
             var products = this.data
                 .Products
@@ -36,6 +37,7 @@
             return View(new IndexViewModel
             {
                 TotalProducts = totalProducts,
+                TotalUsers = totalUsers,
                 Products = products
             });
         }

@@ -78,16 +78,34 @@
     </a>
 </div>
 
-<div class="jumbotron mt-4">
-    <div class="row">
-        <div class="col-md-4 text-center">
-            @Model.TotalProducts Products
-        </div>
-        <div class="col-md-4 text-center">
-            @Model.TotalUsers Users 
-        </div>
-        <div class="col-md-4 text-center">
-            @Model.TotalRents Rents
-        </div>
+<div>
+    <div class="col-12 text-center">
+        <button class="btn btn-primary" id="statistics-button">Show Statistics</button>
     </div>
 </div>
+
+<div class="d-none" id="statistics-jumbotron">
+    <div class="row">
+        <div class="col-md-4 text-center" id="total-products"></div>
+        <div class="col-md-4 text-center" id="total-users"></div>
+        <div class="col-md-4 text-center" id="total-rents"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#statistics-button').on('click', e => {
+            //e.preventDefault;
+
+            $.get('api/statistics', (data) => {
+                $('#total-products').text('Total products: ' + data.totalProducts);
+                $('#total-users').text('Total users: ' + data.totalUsers);
+                $('#total-rents').text('Total rents: ' + data.totalRents);
+
+                $('#statistics-jumbotron').toggleClass("jumbotron mt-4 d-block");
+            })
+
+        });
+
+    </script>
+}
