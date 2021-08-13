@@ -8,67 +8,35 @@
     using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Models.Products;
     using DiyOmnitheca.Infrastructure;
-    using DiyOmnitheca.Models;
+    using DiyOmnitheca.Services.Products;
 
     public class ProductsController : Controller
     {
+        private readonly IProductService products;
         private readonly OmnithecaDbContext data;
 
-        public ProductsController(OmnithecaDbContext data)
-            => this.data = data;
+        public ProductsController(OmnithecaDbContext data, IProductService products)
+        {
+            this.data = data;
+            this.products = products;
+        }
 
 
         public IActionResult All([FromQuery] AllProductsQueryModel query)
         {
-            var productsQuery = this.data.Products.AsQueryable();
+            var queryResult = this.products.All(
+                query.Brand,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                AllProductsQueryModel.ProductsPerPage);
 
-            if (!string.IsNullOrWhiteSpace(query.Brand))
-            {
-                productsQuery = productsQuery.Where(p =>
-                p.Brand == query.Brand);
-            }
+            var productBrands = this.products.AllProductBrands();
 
-            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
-            {
-                productsQuery = productsQuery.Where(p =>
-                (p.Brand + " " + p.Name).ToLower().Contains(query.SearchTerm.ToLower()) ||
-                p.Description.ToLower().Contains(query.SearchTerm.ToLower()));
-            }
-
-            productsQuery = query.Sorting switch
-            {
-                ProductSorting.Price => productsQuery.OrderByDescending(p => p.LendingPrice),
-                ProductSorting.BrandAndName => productsQuery.OrderBy(p => p.Brand).ThenBy(p => p.Name),
-                ProductSorting.DateCreated or _ => productsQuery.OrderByDescending(p => p.Id)
-            };
-
-            var totalProducts = productsQuery.Count();
-
-            var products = productsQuery
-                .Skip((query.CurrentPage - 1) * AllProductsQueryModel.ProductsPerPage)
-                .Take(AllProductsQueryModel.ProductsPerPage)
-                .Select(p => new ProductListingViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Brand = p.Brand,
-                    Description = p.Description,
-                    Category = p.Category.Name,
-                    ImageUrl = p.ImageUrl,
-                    LendingPrice = p.LendingPrice,
-                    Location = p.Location
-                })
-                .ToList();
-
-            var productBrands = this.data
-                .Products
-                .Select(p => p.Brand)
-                .Distinct()
-                .ToList();
-
-            query.TotalProducts = totalProducts;
             query.Brands = productBrands;
-            query.Products = products;
+            query.TotalProducts = queryResult.TotalProducts;
+            query.Products = queryResult.Products;
+                
 
             return View(query);
         }

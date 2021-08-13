@@ -1,7 +1,7 @@
-﻿namespace DiyOmnitheca.Models.Products
+﻿namespace DiyOmnitheca.Services.Products
 {
 
-    public class ProductListingViewModel
+    public class ProductServiceModel
     {
         public int Id { get; init; }
 

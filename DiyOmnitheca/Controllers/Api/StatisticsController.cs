@@ -1,32 +1,19 @@
 ﻿namespace DiyOmnitheca.Controllers.Api
 {
-    using System.Linq;
-    using DiyOmnitheca.Data;
-    using DiyOmnitheca.Models.Api.Statistics;
+    using DiyOmnitheca.Services.Statistics;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
     [Route("api/statistics")]
     public class StatisticsController : ControllerBase
     {
-        private readonly OmnithecaDbContext data;
+        private readonly IStatisticsService statistics;
 
-        public StatisticsController(OmnithecaDbContext data)
-            => this.data = data;
+        public StatisticsController(IStatisticsService statistics)
+            => this.statistics = statistics;
 
         [HttpGet]
-        public StatisticsResponseModel GetStatistics()
-        {
-            var totalProducts = this.data.Products.Count();
-            var totalUsers = this.data.Users.Count();
-
-            return new StatisticsResponseModel
-            {
-                TotalProducts = totalProducts,
-                TotalUsers = totalUsers,
-                TotalRents = 0
-            };
-
-        }
+        public StatisticsServiceModel GetStatistics() 
+            => this.statistics.Total();
     }
 }

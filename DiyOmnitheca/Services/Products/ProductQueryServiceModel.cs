@@ -1,9 +1,8 @@
-﻿namespace DiyOmnitheca.Models.Api.Products
+﻿namespace DiyOmnitheca.Services.Products
 {
     using System.Collections.Generic;
 
-
-    public class AllProductsApiResponseModel
+    public class ProductQueryServiceModel
     {
         public int CurrentPage { get; init; }
 
@@ -11,6 +10,6 @@
 
         public int TotalProducts { get; init; }
 
-        public IEnumerable<ProductResponseModel> Products { get; init; }
+        public IEnumerable<ProductServiceModel> Products { get; init; }
     }
 }

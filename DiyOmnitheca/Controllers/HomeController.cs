@@ -5,21 +5,24 @@
     using DiyOmnitheca.Data;
     using DiyOmnitheca.Models;
     using DiyOmnitheca.Models.Home;
+    using DiyOmnitheca.Services.Statistics;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : Controller
     {
+        private readonly IStatisticsService statistics;
         private readonly OmnithecaDbContext data;
 
-        public HomeController(OmnithecaDbContext data)
-           => this.data = data;
-
+        public HomeController(
+            IStatisticsService statistics,
+            OmnithecaDbContext data)
+        {
+            this.statistics = statistics;
+            this.data = data;
+        }
 
         public IActionResult Index()
         {
-            var totalProducts = this.data.Products.Count();
-            var totalUsers = this.data.Users.Count();
-
             var products = this.data
                 .Products
                 .OrderByDescending(p => p.Id)
@@ -34,10 +37,12 @@
                 .Take(3)
                 .ToList();
 
+            var totalStatistics = this.statistics.Total();
+
             return View(new IndexViewModel
             {
-                TotalProducts = totalProducts,
-                TotalUsers = totalUsers,
+                TotalProducts = totalStatistics.TotalProducts,
+                TotalUsers = totalStatistics.TotalUsers,
                 Products = products
             });
         }

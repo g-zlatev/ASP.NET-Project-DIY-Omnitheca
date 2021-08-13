@@ -12,6 +12,5 @@
 
         public int ProductsPerPage { get; init; } = 10;
 
-        public int TotalProducts { get; init; }
     }
 }

@@ -2,6 +2,8 @@ namespace DiyOmnitheca
 {
     using DiyOmnitheca.Data;
     using DiyOmnitheca.Infrastructure;
+    using DiyOmnitheca.Services.Products;
+    using DiyOmnitheca.Services.Statistics;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -37,8 +39,10 @@ namespace DiyOmnitheca
                 })
                 .AddEntityFrameworkStores<OmnithecaDbContext>();
 
-            services
-                .AddControllersWithViews();
+            services.AddControllersWithViews();
+
+            services.AddTransient<IStatisticsService, StatisticsService>();
+            services.AddTransient<IProductService, ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

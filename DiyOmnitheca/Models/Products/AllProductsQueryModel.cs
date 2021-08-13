@@ -1,6 +1,7 @@
 ﻿namespace DiyOmnitheca.Models.Products
 {
     using System.Collections.Generic;
+    using DiyOmnitheca.Services.Products;
 
     public class AllProductsQueryModel
     {
@@ -18,6 +19,6 @@
 
         public IEnumerable<string> Brands { get; set; }
 
-        public IEnumerable<ProductListingViewModel> Products { get; set; }
+        public IEnumerable<ProductServiceModel> Products { get; set; }
     }
 }
