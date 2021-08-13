@@ -1,4 +1,4 @@
-﻿namespace DiyOmnitheca.Models.Products
+﻿namespace DiyOmnitheca.Models
 {
     public enum  ProductSorting
     {

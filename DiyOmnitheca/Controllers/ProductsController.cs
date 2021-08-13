@@ -8,6 +8,7 @@
     using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Models.Products;
     using DiyOmnitheca.Infrastructure;
+    using DiyOmnitheca.Models;
 
     public class ProductsController : Controller
     {

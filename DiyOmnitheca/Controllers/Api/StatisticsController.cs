@@ -2,7 +2,7 @@
 {
     using System.Linq;
     using DiyOmnitheca.Data;
-    using DiyOmnitheca.Models.Api;
+    using DiyOmnitheca.Models.Api.Statistics;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]

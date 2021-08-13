@@ -1,4 +1,4 @@
-﻿namespace DiyOmnitheca.Models.Api
+﻿namespace DiyOmnitheca.Models.Api.Statistics
 {
     public class StatisticsResponseModel
     {
