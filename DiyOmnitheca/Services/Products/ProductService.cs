@@ -98,10 +98,40 @@
             return productData.Id;
         }
 
+        public bool Edit(int id, string brand, string name, string description, string imageUrl, double lendingPrice, string location, int categoryId)
+        {
+            var productData = this.data
+                .Products
+                .Find(id);
+
+            if (productData == null)
+            {
+                return false;
+            }
+
+            productData.Brand = brand;
+            productData.Name = name;
+            productData.Description = description;
+            productData.ImageUrl = imageUrl;
+            productData.LendingPrice = (decimal)lendingPrice;
+            productData.Location = location;
+            productData.CategoryId = categoryId;
+
+            this.data.SaveChanges();
+
+            return true;
+        }
+
         public IEnumerable<ProductServiceModel> OwnProducts(string userId)
             => GetProducts(this.data
                 .Products
                 .Where(p => p.Lender.UserId == userId));
+
+
+        public bool IsByLender(int productId, int lenderId)
+            => this.data
+                .Products
+                .Any(p => p.Id == productId && p.LenderId == lenderId);
 
 
         public IEnumerable<string> AllBrands()
@@ -126,7 +156,7 @@
             => this.data
                 .Categories
                 .Any(c => c.Id == categoryId);
-        
+
 
         private static IEnumerable<ProductServiceModel> GetProducts(IQueryable<Product> productQuery)
             => productQuery

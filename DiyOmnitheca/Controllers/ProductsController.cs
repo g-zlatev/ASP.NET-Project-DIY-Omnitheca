@@ -132,5 +132,46 @@
                 Categories = this.products.AllCategories()
             });
         }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Edit(int id, ProductFormModel product)
+        {
+            var lenderId = this.lenders.GetIdByUser(this.User.GetId());
+
+            if (lenderId == 0)
+            {
+                return RedirectToAction(nameof(LendersController.Become), "Lenders");
+            }
+
+            if (!this.products.CategoryExists(product.CategoryId))
+            {
+                this.ModelState.AddModelError(nameof(product.CategoryId), "Category does not exist!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                product.Categories = this.products.AllCategories();
+
+                return View(product);
+            }
+
+            if (!this.products.IsByLender(id, lenderId))
+            {
+                return BadRequest();
+            }
+
+            this.products.Edit(
+                id,
+                product.Brand,
+                product.Name,
+                product.Description,
+                product.ImageUrl,
+                product.LendingPrice,
+                product.Location,
+                product.CategoryId);
+
+            return RedirectToAction(nameof(MyProducts));
+        }
     }
 }

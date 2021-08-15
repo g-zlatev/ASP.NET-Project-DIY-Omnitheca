@@ -13,7 +13,7 @@
             int currentPage,
             int productsPerPage);
 
-        ProductDetailsServiceModel Details(int id);
+        ProductDetailsServiceModel Details(int productId);
 
         int Create(
                 string brand,
@@ -25,7 +25,19 @@
                 int categoryId,
                 int lenderId);
 
+        bool Edit(
+                int productId,
+                string brand,
+                string name,
+                string description,
+                string imageUrl,
+                double lendingPrice,
+                string location,
+                int categoryId);
+
         IEnumerable<ProductServiceModel> OwnProducts(string userId);
+
+        bool IsByLender(int productId, int lenderId);
 
         IEnumerable<string> AllBrands();
 
