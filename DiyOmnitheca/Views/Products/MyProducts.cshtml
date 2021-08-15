@@ -1,0 +1,14 @@
+﻿@model IEnumerable<ProductServiceModel>
+
+@{
+    ViewBag.Title = "My Products";
+    ViewBag.AllowProductEdit = true;
+}
+
+
+@if (!Model.Any())
+{
+    <h2 class="text-center">No products to show!</h2>
+}
+
+<partial name="_ProductsPartial"  model="@Model"/>

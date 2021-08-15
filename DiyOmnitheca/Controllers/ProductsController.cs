@@ -9,16 +9,19 @@
     using DiyOmnitheca.Models.Products;
     using DiyOmnitheca.Infrastructure;
     using DiyOmnitheca.Services.Products;
+    using DiyOmnitheca.Services.Lenders;
 
     public class ProductsController : Controller
     {
-        private readonly IProductService products;
         private readonly OmnithecaDbContext data;
+        private readonly IProductService products;
+        private readonly ILenderService lenders;
 
-        public ProductsController(OmnithecaDbContext data, IProductService products)
+        public ProductsController(OmnithecaDbContext data, IProductService products, ILenderService lenders)
         {
             this.data = data;
             this.products = products;
+            this.lenders = lenders;
         }
 
 
@@ -31,7 +34,7 @@
                 query.CurrentPage,
                 AllProductsQueryModel.ProductsPerPage);
 
-            var productBrands = this.products.AllProductBrands();
+            var productBrands = this.products.AllBrands();
 
             query.Brands = productBrands;
             query.TotalProducts = queryResult.TotalProducts;
@@ -42,77 +45,92 @@
         }
 
         [Authorize]
+        public IActionResult MyProducts()
+        {
+            var myProducts = this.products.OwnProducts(this.User.GetId());
+
+            return View(myProducts);
+        }
+
+
+        [Authorize]
         public IActionResult Add()
         {
-            if (!this.UserIsLender())
+            if (!this.lenders.IsLender(this.User.GetId()))
             {
                 return RedirectToAction(nameof(LendersController.Become), "Lenders");
             }
 
-            return View(new AddProductFormModel
+            return View(new ProductFormModel
             {
-                Categories = this.GetProductCategories()
+                Categories = this.products.AllCategories()
             });
         }
 
         [HttpPost]
         [Authorize]
-        public IActionResult Add(AddProductFormModel product)
+        public IActionResult Add(ProductFormModel product)
         {
-            var lenderId = this.data
-                .Lenders
-                .Where(l => l.UserId == this.User.GetId())
-                .Select(l => l.Id)
-                .FirstOrDefault();
+            var lenderId = this.lenders.GetIdByUser(this.User.GetId());
 
             if (lenderId == 0)
             {
                 return RedirectToAction(nameof(LendersController.Become), "Lenders");
             }
 
-            if (!this.data.Categories.Any(c => c.Id == product.CategoryId))
+            if (!this.products.CategoryExists(product.CategoryId))
             {
                 this.ModelState.AddModelError(nameof(product.CategoryId), "Category does not exist!");
             }
 
             if (!ModelState.IsValid)
             {
-                product.Categories = this.GetProductCategories();
+                product.Categories = this.products.AllCategories();
 
                 return View(product);
             }
 
-            var productData = new Product
+            this.products.Create(
+                product.Brand,
+                product.Name,
+                product.Description,
+                product.ImageUrl,
+                product.LendingPrice,
+                product.Location,
+                product.CategoryId,
+                lenderId);
+
+            return RedirectToAction(nameof(All));
+        }
+
+        [Authorize]
+        public IActionResult Edit(int id)
+        {
+            var userId = this.User.GetId();
+
+            if (!this.lenders.IsLender(userId))
+            {
+                return RedirectToAction(nameof(LendersController.Become), "Lenders");
+            }
+
+            var product = this.products.Details(id);
+
+            if (product.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            return View(new ProductFormModel
             {
                 Brand = product.Brand,
                 Name = product.Name,
                 Description = product.Description,
                 ImageUrl = product.ImageUrl,
-                LendingPrice = (decimal)product.LendingPrice,
+                LendingPrice = (double)product.LendingPrice,
                 Location = product.Location,
                 CategoryId = product.CategoryId,
-                LenderId = lenderId
-            };
-
-            this.data.Products.Add(productData);
-            this.data.SaveChanges();
-
-            return RedirectToAction(nameof(All));
+                Categories = this.products.AllCategories()
+            });
         }
-
-        private bool UserIsLender()
-            => this.data
-                .Lenders
-                .Any(l => l.UserId == this.User.GetId());
-
-        private IEnumerable<ProductCategoryViewModel> GetProductCategories()
-            => this.data
-            .Categories
-            .Select(c => new ProductCategoryViewModel
-            {
-                Id = c.Id,
-                Name = c.Name
-            })
-            .ToList();
     }
 }

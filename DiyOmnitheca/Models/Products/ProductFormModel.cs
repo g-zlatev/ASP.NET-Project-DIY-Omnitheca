@@ -2,10 +2,11 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using DiyOmnitheca.Services.Products;
 
     using static Data.DataConstants.Product;
 
-    public class AddProductFormModel
+    public class ProductFormModel
     {
         [Required]
         [StringLength(ProductNameMaxLength, MinimumLength = ProductDefaultMinLength)]
@@ -39,6 +40,6 @@
         [Display(Name = "Category")]
         public int CategoryId { get; init; }
 
-        public IEnumerable<ProductCategoryViewModel> Categories { get; set; }
+        public IEnumerable<ProductCategoryServiceModel> Categories { get; set; }
     }
 }

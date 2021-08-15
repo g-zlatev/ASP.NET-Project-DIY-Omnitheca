@@ -1,6 +1,6 @@
-﻿namespace DiyOmnitheca.Models.Products
+﻿namespace DiyOmnitheca.Services.Products
 {
-    public class ProductCategoryViewModel
+    public class ProductCategoryServiceModel
     {
         public int Id { get; init; }
 

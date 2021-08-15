@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using DiyOmnitheca.Models;
+    using DiyOmnitheca.Models.Products;
 
     public interface IProductService
     {
@@ -12,6 +13,24 @@
             int currentPage,
             int productsPerPage);
 
-        IEnumerable<string> AllProductBrands();
+        ProductDetailsServiceModel Details(int id);
+
+        int Create(
+                string brand,
+                string name,
+                string description,
+                string imageUrl,
+                double lendingPrice,
+                string location,
+                int categoryId,
+                int lenderId);
+
+        IEnumerable<ProductServiceModel> OwnProducts(string userId);
+
+        IEnumerable<string> AllBrands();
+
+        IEnumerable<ProductCategoryServiceModel> AllCategories();
+
+        bool CategoryExists(int categoryId);
     }
 }

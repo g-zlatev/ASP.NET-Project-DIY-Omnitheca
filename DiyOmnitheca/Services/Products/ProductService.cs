@@ -3,13 +3,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using DiyOmnitheca.Data;
+    using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Models;
 
     public class ProductService : IProductService
     {
         private readonly OmnithecaDbContext data;
 
-        public ProductService(OmnithecaDbContext data) 
+        public ProductService(OmnithecaDbContext data)
             => this.data = data;
 
         public ProductQueryServiceModel All(
@@ -43,21 +44,10 @@
 
             var totalProducts = productsQuery.Count();
 
-            var products = productsQuery
+            var products = GetProducts(productsQuery
                 .Skip((currentPage - 1) * productsPerPage)
-                .Take(productsPerPage)
-                .Select(p => new ProductServiceModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Brand = p.Brand,
-                    Description = p.Description,
-                    Category = p.Category.Name,
-                    ImageUrl = p.ImageUrl,
-                    LendingPrice = p.LendingPrice,
-                    Location = p.Location
-                })
-                .ToList();
+                .Take(productsPerPage));
+
 
             return new ProductQueryServiceModel
             {
@@ -68,12 +58,90 @@
             };
         }
 
-        public IEnumerable<string> AllProductBrands() 
+        public ProductDetailsServiceModel Details(int id)
+            => this.data
+                .Products
+                .Where(p => p.Id == id)
+                .Select(p => new ProductDetailsServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Brand = p.Brand,
+                    Description = p.Description,
+                    CategoryName = p.Category.Name,
+                    ImageUrl = p.ImageUrl,
+                    LendingPrice = p.LendingPrice,
+                    Location = p.Location,
+                    LenderId = p.LenderId,
+                    LenderName = p.Lender.Name,
+                    UserId = p.Lender.UserId
+                })
+                .FirstOrDefault();
+
+        public int Create(string brand, string name, string description, string imageUrl, double lendingPrice, string location, int categoryId, int lenderId)
+        {
+            var productData = new Product
+            {
+                Brand = brand,
+                Name = name,
+                Description = description,
+                ImageUrl = imageUrl,
+                LendingPrice = (decimal)lendingPrice,
+                Location = location,
+                CategoryId = categoryId,
+                LenderId = lenderId
+            };
+
+            this.data.Products.Add(productData);
+            this.data.SaveChanges();
+
+            return productData.Id;
+        }
+
+        public IEnumerable<ProductServiceModel> OwnProducts(string userId)
+            => GetProducts(this.data
+                .Products
+                .Where(p => p.Lender.UserId == userId));
+
+
+        public IEnumerable<string> AllBrands()
             => this.data
                 .Products
                 .Select(p => p.Brand)
                 .Distinct()
                 .OrderBy(br => br)
                 .ToList();
+
+        public IEnumerable<ProductCategoryServiceModel> AllCategories()
+         => this.data
+            .Categories
+            .Select(c => new ProductCategoryServiceModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            })
+            .ToList();
+
+        public bool CategoryExists(int categoryId)
+            => this.data
+                .Categories
+                .Any(c => c.Id == categoryId);
+        
+
+        private static IEnumerable<ProductServiceModel> GetProducts(IQueryable<Product> productQuery)
+            => productQuery
+                .Select(p => new ProductServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Brand = p.Brand,
+                    Description = p.Description,
+                    CategoryName = p.Category.Name,
+                    ImageUrl = p.ImageUrl,
+                    LendingPrice = p.LendingPrice,
+                    Location = p.Location
+                })
+                .ToList();
+
     }
 }

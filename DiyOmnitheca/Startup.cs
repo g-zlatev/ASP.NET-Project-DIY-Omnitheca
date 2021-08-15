@@ -2,11 +2,13 @@ namespace DiyOmnitheca
 {
     using DiyOmnitheca.Data;
     using DiyOmnitheca.Infrastructure;
+    using DiyOmnitheca.Services.Lenders;
     using DiyOmnitheca.Services.Products;
     using DiyOmnitheca.Services.Statistics;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -39,10 +41,14 @@ namespace DiyOmnitheca
                 })
                 .AddEntityFrameworkStores<OmnithecaDbContext>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+            });
 
-            services.AddTransient<IStatisticsService, StatisticsService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ILenderService, LenderService>();
+            services.AddTransient<IStatisticsService, StatisticsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
