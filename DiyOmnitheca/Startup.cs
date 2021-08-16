@@ -1,6 +1,7 @@
 namespace DiyOmnitheca
 {
     using DiyOmnitheca.Data;
+    using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Infrastructure;
     using DiyOmnitheca.Services.Lenders;
     using DiyOmnitheca.Services.Products;
@@ -32,13 +33,14 @@ namespace DiyOmnitheca
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services
-                .AddDefaultIdentity<IdentityUser>(options =>
+                .AddDefaultIdentity<User>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<OmnithecaDbContext>();
 
             services.AddControllersWithViews(options =>

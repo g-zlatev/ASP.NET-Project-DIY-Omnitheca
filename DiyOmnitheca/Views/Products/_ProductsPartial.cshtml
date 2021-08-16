@@ -9,7 +9,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@product.Brand @product.Name</h5>
                     <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">Details</a>
-                    @if (ViewBag.AllowProductEdit == true)
+                    @if (ViewBag.AllowProductEdit == true || User.IsAdmin())
                     {
                         <a asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
                         <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>

@@ -24,9 +24,12 @@ namespace DiyOmnitheca.Data
         {
             public const int PersonNameMinLength = 2;
             public const int PersonNameMaxLength = 30;
+            public const int PersonFullNameMinLength = 4;
+            public const int PersonFullNameMaxLength = 50;
             public const int PhoneNumberMinLength = 6;
             public const int PhoneNumberMaxLength = 20;
-
+            public const int PasswordMinLength = 6;
+            public const int PasswordMaxLength = 100;
         }
 
     }

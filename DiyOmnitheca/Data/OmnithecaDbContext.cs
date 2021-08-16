@@ -1,11 +1,10 @@
 ﻿namespace DiyOmnitheca.Data
 {
     using DiyOmnitheca.Data.Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class OmnithecaDbContext : IdentityDbContext
+    public class OmnithecaDbContext : IdentityDbContext<User>
     {
 
         public OmnithecaDbContext(DbContextOptions<OmnithecaDbContext> options)
@@ -42,7 +41,7 @@
 
             builder
                 .Entity<Lender>()
-                .HasOne<IdentityUser>()
+                .HasOne<User>()
                 .WithOne()
                 .HasForeignKey<Lender>(l => l.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -56,7 +55,7 @@
 
             builder
                 .Entity<Borrower>()
-                .HasOne<IdentityUser>()
+                .HasOne<User>()
                 .WithOne()
                 .HasForeignKey<Borrower>(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);

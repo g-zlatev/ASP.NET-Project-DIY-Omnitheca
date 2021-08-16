@@ -1,11 +1,7 @@
 ﻿namespace DiyOmnitheca.Controllers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
-    using DiyOmnitheca.Data;
-    using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Models.Products;
     using DiyOmnitheca.Infrastructure;
     using DiyOmnitheca.Services.Products;
@@ -13,13 +9,11 @@
 
     public class ProductsController : Controller
     {
-        private readonly OmnithecaDbContext data;
         private readonly IProductService products;
         private readonly ILenderService lenders;
 
-        public ProductsController(OmnithecaDbContext data, IProductService products, ILenderService lenders)
+        public ProductsController(IProductService products, ILenderService lenders)
         {
-            this.data = data;
             this.products = products;
             this.lenders = lenders;
         }
@@ -56,7 +50,7 @@
         [Authorize]
         public IActionResult Add()
         {
-            if (!this.lenders.IsLender(this.User.GetId()))
+            if (!this.lenders.IsLender(this.User.GetId()) && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(LendersController.Become), "Lenders");
             }
@@ -71,9 +65,9 @@
         [Authorize]
         public IActionResult Add(ProductFormModel product)
         {
-            var lenderId = this.lenders.GetIdByUser(this.User.GetId());
+            var lenderId = this.lenders.IdByUser(this.User.GetId());
 
-            if (lenderId == 0)
+            if (lenderId == 0 && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(LendersController.Become), "Lenders");
             }
@@ -108,14 +102,14 @@
         {
             var userId = this.User.GetId();
 
-            if (!this.lenders.IsLender(userId))
+            if (!this.lenders.IsLender(userId) && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(LendersController.Become), "Lenders");
             }
 
             var product = this.products.Details(id);
 
-            if (product.UserId != userId)
+            if (product.UserId != userId && !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -137,9 +131,9 @@
         [Authorize]
         public IActionResult Edit(int id, ProductFormModel product)
         {
-            var lenderId = this.lenders.GetIdByUser(this.User.GetId());
+            var lenderId = this.lenders.IdByUser(this.User.GetId());
 
-            if (lenderId == 0)
+            if (lenderId == 0 && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(LendersController.Become), "Lenders");
             }
@@ -156,7 +150,7 @@
                 return View(product);
             }
 
-            if (!this.products.IsByLender(id, lenderId))
+            if (!this.products.IsByLender(id, lenderId) && !User.IsAdmin())
             {
                 return BadRequest();
             }

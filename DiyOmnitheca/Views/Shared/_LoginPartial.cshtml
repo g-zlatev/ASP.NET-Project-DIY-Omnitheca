@@ -1,21 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using DiyOmnitheca.Data.Models
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 @inject ILenderService Lenders
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-            var userId = User.GetId();
-            var userIsLender = Lenders.IsLender(userId);
+        var userId = User.GetId();
+        var userIsLender = Lenders.IsLender(userId);
+        var userIsAdmin = User.IsAdmin();
 
-        @if (userIsLender)
+        @if (userIsLender && !userIsAdmin)
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="MyProducts">My Products</a>
             </li>
         }
-        else
+        else if (!userIsAdmin)
         {
             <li class="nav-item">
                 <a class="nav-link text-primary btn btn-outline-primary" asp-area="" asp-controller="Lenders" asp-action="Become">Become OmniLender!</a>

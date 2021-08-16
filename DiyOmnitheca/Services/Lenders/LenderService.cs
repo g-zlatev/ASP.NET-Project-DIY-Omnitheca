@@ -15,7 +15,7 @@
             .Lenders
             .Any(l => l.UserId == userId);
 
-        public int GetIdByUser(string userId)
+        public int IdByUser(string userId)
              => this.data
                    .Lenders
                    .Where(l => l.UserId == userId)
