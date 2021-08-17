@@ -6,16 +6,19 @@
     using DiyOmnitheca.Infrastructure;
     using DiyOmnitheca.Services.Products;
     using DiyOmnitheca.Services.Lenders;
+    using AutoMapper;
 
     public class ProductsController : Controller
     {
         private readonly IProductService products;
         private readonly ILenderService lenders;
+        private readonly IMapper mapper;
 
-        public ProductsController(IProductService products, ILenderService lenders)
+        public ProductsController(IProductService products, ILenderService lenders, IMapper mapper)
         {
             this.products = products;
             this.lenders = lenders;
+            this.mapper = mapper;
         }
 
 
@@ -114,17 +117,11 @@
                 return Unauthorized();
             }
 
-            return View(new ProductFormModel
-            {
-                Brand = product.Brand,
-                Name = product.Name,
-                Description = product.Description,
-                ImageUrl = product.ImageUrl,
-                LendingPrice = (double)product.LendingPrice,
-                Location = product.Location,
-                CategoryId = product.CategoryId,
-                Categories = this.products.AllCategories()
-            });
+            var productForm = this.mapper.Map<ProductFormModel>(product);
+
+            productForm.Categories = this.products.AllCategories();
+
+            return View(productForm);
         }
 
         [HttpPost]

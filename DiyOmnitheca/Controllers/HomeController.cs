@@ -2,6 +2,8 @@
 {
     using System.Diagnostics;
     using System.Linq;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using DiyOmnitheca.Data;
     using DiyOmnitheca.Models;
     using DiyOmnitheca.Models.Home;
@@ -11,13 +13,16 @@
     public class HomeController : Controller
     {
         private readonly IStatisticsService statistics;
+        private readonly IMapper mapper;
         private readonly OmnithecaDbContext data;
 
         public HomeController(
             IStatisticsService statistics,
+            IMapper mapper,
             OmnithecaDbContext data)
         {
             this.statistics = statistics;
+            this.mapper = mapper;
             this.data = data;
         }
 
@@ -26,14 +31,7 @@
             var products = this.data
                 .Products
                 .OrderByDescending(p => p.Id)
-                .Select(p => new ProductIndexViewModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Brand = p.Brand,
-                    Description = p.Description,
-                    ImageUrl = p.ImageUrl
-                })
+                .ProjectTo<ProductIndexViewModel>(this.mapper.ConfigurationProvider)
                 .Take(3)
                 .ToList();
 

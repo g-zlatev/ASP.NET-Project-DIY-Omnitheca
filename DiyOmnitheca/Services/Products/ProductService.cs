@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using DiyOmnitheca.Data;
     using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Models;
@@ -9,9 +11,14 @@
     public class ProductService : IProductService
     {
         private readonly OmnithecaDbContext data;
+        private readonly IMapper mapper;
 
-        public ProductService(OmnithecaDbContext data)
-            => this.data = data;
+        public ProductService(OmnithecaDbContext data, IMapper mapper)
+        {
+            this.data = data;
+            this.mapper = mapper;
+        }
+
 
         public ProductQueryServiceModel All(
             string brand,
@@ -62,20 +69,7 @@
             => this.data
                 .Products
                 .Where(p => p.Id == id)
-                .Select(p => new ProductDetailsServiceModel
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Brand = p.Brand,
-                    Description = p.Description,
-                    CategoryName = p.Category.Name,
-                    ImageUrl = p.ImageUrl,
-                    LendingPrice = p.LendingPrice,
-                    Location = p.Location,
-                    LenderId = p.LenderId,
-                    LenderName = p.Lender.Name,
-                    UserId = p.Lender.UserId
-                })
+                .ProjectTo<ProductDetailsServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefault();
 
         public int Create(string brand, string name, string description, string imageUrl, double lendingPrice, string location, int categoryId, int lenderId)

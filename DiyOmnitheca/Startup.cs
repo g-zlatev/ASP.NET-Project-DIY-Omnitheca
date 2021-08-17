@@ -43,6 +43,8 @@ namespace DiyOmnitheca
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<OmnithecaDbContext>();
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
