@@ -61,7 +61,7 @@
                 <li class="list-group-item">@product.LendingPrice lv.</li>
             </ul>
             <div class="card-body">
-                <a asp-controller="Products" asp-action="Details" asp-route-id="product.Id" class="btn btn-primary">Details</a>
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">Details</a>
                 @if (ViewBag.AllowProductEdit == true || User.IsInRole(WebConstants.AdministratorRoleName))
                 {
                     <a asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>

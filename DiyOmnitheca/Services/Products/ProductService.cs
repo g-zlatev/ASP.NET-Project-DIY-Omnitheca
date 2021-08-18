@@ -66,11 +66,52 @@
         }
 
         public ProductDetailsServiceModel Details(int id)
-            => this.data
+        {
+            var product = this.data
                 .Products
                 .Where(p => p.Id == id)
                 .ProjectTo<ProductDetailsServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefault();
+
+            //var borrower = this.data
+            //    .Borrowers
+            //    .Where(b => b.Id == product.BorrowerId)
+            //    .FirstOrDefault();
+
+            //if (borrower != null)
+            //{
+            //    var userBorrower = this.data
+            //    .Users
+            //    .Where(u => u.Id == borrower.UserId)
+            //    .FirstOrDefault();
+
+            //    product.BorrowerName = userBorrower.FullName;
+            //}
+
+            var lenderId = this.data
+                .Lenders
+                .Where(l => l.Id == product.LenderId)
+                .Select(x => x.UserId)
+                .FirstOrDefault();
+
+            //var lenderName = this.data
+            //    .Lenders
+            //    .Where(l => l.Id == product.LenderId)
+            //    .Select(x => x.FullName)
+            //    .FirstOrDefault();
+
+            if (lenderId != null)
+            {
+                var lenderName = this.data
+                .Users
+                .Find(lenderId);
+
+                product.LenderName = lenderName.FullName;
+            }
+
+            return product;
+        }
+
 
         public int Create(string brand, string name, string description, string imageUrl, double lendingPrice, string location, int categoryId, int lenderId)
         {

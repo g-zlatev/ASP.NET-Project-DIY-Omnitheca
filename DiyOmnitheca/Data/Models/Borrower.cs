@@ -10,8 +10,8 @@
         public int Id { get; init; }
 
         [Required]
-        [MaxLength(PersonNameMaxLength)]
-        public string Name { get; set; }
+        [MaxLength(PersonAddressMaxLength)]
+        public string Address { get; set; }
 
         [Required]
         [MaxLength(PhoneNumberMaxLength)]

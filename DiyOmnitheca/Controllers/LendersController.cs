@@ -43,7 +43,7 @@
 
             var lenderData = new Lender
             {
-                Name = lender.Name,
+                Address = lender.Address,
                 PhoneNumber = lender.PhoneNumber,
                 UserId = userId
             };

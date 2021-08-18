@@ -7,8 +7,8 @@
     public class BecomeLenderFormModel
     {
         [Required]
-        [StringLength(PersonNameMaxLength, MinimumLength = PersonNameMinLength)]
-        public string Name { get; set; }
+        [StringLength(PersonAddressMaxLength, MinimumLength = PersonAddressMinLength)]
+        public string Address { get; set; }
 
         [Required]
         [StringLength(PhoneNumberMaxLength, MinimumLength = PhoneNumberMinLength)]

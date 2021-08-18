@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Services.Products;
 
     using static Data.DataConstants.Product;
@@ -33,9 +34,9 @@
         [Url]
         public string ImageUrl { get; init; }
 
-        public string Owner { get; init; }
+        public Lender Owner { get; init; }
 
-        public string Borrower { get; init; }
+        public Borrower Borrower { get; init; }
 
         [Display(Name = "Category")]
         public int CategoryId { get; init; }

@@ -100,6 +100,14 @@
             return RedirectToAction(nameof(All));
         }
 
+        public IActionResult Details(int id)
+        {
+            var product = this.products.Details(id);
+
+
+            return View(product);
+        }
+
         [Authorize]
         public IActionResult Edit(int id)
         {

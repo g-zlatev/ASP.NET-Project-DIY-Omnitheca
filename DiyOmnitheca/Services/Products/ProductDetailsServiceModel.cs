@@ -4,7 +4,11 @@
     {
         public int LenderId { get; init; }
 
-        public string LenderName { get; init; }
+        public string LenderName { get; set; }
+
+        public int BorrowerId { get; init; }
+
+        public string BorrowerName { get; set; }
 
         public int CategoryId { get; init; }
 
