@@ -65,6 +65,15 @@
             };
         }
 
+        public IEnumerable<LatestProductServiceModel> Latest()
+            => this.data
+                .Products
+                .OrderByDescending(p => p.Id)
+                .ProjectTo<LatestProductServiceModel>(this.mapper.ConfigurationProvider)
+                .Take(3)
+                .ToList();
+
+
         public ProductDetailsServiceModel Details(int id)
         {
             var product = this.data

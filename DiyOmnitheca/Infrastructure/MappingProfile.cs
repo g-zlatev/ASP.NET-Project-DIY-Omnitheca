@@ -2,7 +2,6 @@
 {
     using AutoMapper;
     using DiyOmnitheca.Data.Models;
-    using DiyOmnitheca.Models.Home;
     using DiyOmnitheca.Models.Products;
     using DiyOmnitheca.Services.Products;
 
@@ -10,7 +9,7 @@
     {
         public MappingProfile()
         {
-            this.CreateMap<Product, ProductIndexViewModel>();
+            this.CreateMap<Product, LatestProductServiceModel>();
             this.CreateMap<ProductDetailsServiceModel, ProductFormModel>();
 
             this.CreateMap<Product, ProductDetailsServiceModel>()

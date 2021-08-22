@@ -1,7 +1,7 @@
-﻿namespace DiyOmnitheca.Models.Home
+﻿namespace DiyOmnitheca.Services.Products
 {
 
-    public class ProductIndexViewModel
+    public class LatestProductServiceModel
     {
         public int Id { get; init; }
 
