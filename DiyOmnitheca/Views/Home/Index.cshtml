@@ -1,5 +1,12 @@
 ﻿@model IndexViewModel
 
+@using Microsoft.AspNetCore.Identity
+@using DiyOmnitheca.Data.Models
+
+@inject UserManager<User> UserManager
+@inject ILenderService Lenders
+@inject SignInManager<User> SignInManager
+
 @{
     ViewBag.Title = "Home Page";
 }
@@ -7,57 +14,83 @@
 @{
     string ShortenDescription(string input)
     {
-        return input.Length > 30 ? input.Substring(0, 30) + "..." : input;
+        return input.Length > 50 ? input.Substring(0, 50) + "..." : input;
     }
 }
 
+
+<section class="py-1 text-center container">
+    <div class="row py-lg-3">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Welcome to DIY OmniTheca!</h1>
+            <p class="lead text-muted">DIY Omnitheca is a web application for lending and renting tools and equipment for your DIY projects. At DIY Omnitheca we believe that sharing is caring, so don't fret and share something of yours with the people in need!</p>
+            <p>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    var userId = User.GetId();
+                    var userIsLender = Lenders.IsLender(userId);
+                    var userIsAdmin = User.IsAdmin();
+
+                    @if (userIsLender && !userIsAdmin)
+                    {
+                        <a class="btn btn-primary my-2" asp-area="" asp-controller="Products" asp-action="MyProducts">View your Products!</a>
+                    }
+                    else if (!userIsAdmin)
+                    {
+                        <a class="btn btn-primary my-2" asp-area="" asp-controller="Lenders" asp-action="Become">Become OmniLender!</a>
+                    }
+                }
+
+            </p>
+        </div>
+    </div>
+</section>
+
 @if (!Model.Products.Any())
 {
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to DIY Omnitheca!</h1>
-        <p class="lead">Your favourite place for lending tools and equipment for your projects.</p>
-        <hr class="my-4">
-        <p>There are currently no products to show. Feel free to add some!</p>
-        <p class="lead">
-            <a asp-controller="Products" asp-action="Add" class="btn btn-primary btn-lg" role="button">Add product</a>
-        </p>
-    </div>
+<div class="jumbotron">
+    <hr class="my-4">
+    <p>There are currently no products to show. Feel free to add some!</p>
+    <p class="lead">
+        <a asp-controller="Products" asp-action="Add" class="btn btn-primary btn-lg" role="button">Add product</a>
+    </p>
+</div>
 }
 
-<div class="mb-5"></div>
+<div class="album py-3 bg-light">
+    <div class="container">
+        <h5 class="pt-0 pb-3 text-center">Latest products</h5>
 
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-<div id="carouselExampleControls" class="carousel slide w-75 h-25 offset-2" data-ride="carousel">
-    <div class="carousel-inner">
-
-        @for (int i = 0; i < Model.Products.Count; i++)
-        {
+            @for (int i = 0; i < Model.Products.Count; i++)
+            {
             var product = Model.Products[i];
 
-            <div class="carousel-item @(i == 0 ? "active" : string.Empty)">
-                <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id"><img style="width: 100%; height: 30vw; object-fit: scale-down;" src="@product.ImageUrl" alt="@product.Brand @product.Name"></a>
-                <div class="carousel-caption d-none d-md-block text-dark">
-                    <h5>@product.Brand @product.Name</h5>
-                    <p>@ShortenDescription(product.Description)</p>
+            <div class="col">
+                <div class="card shadow-sm">
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="50px" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><img style="width: 100%; height: 15vw; object-fit: scale-down;" src="@product.ImageUrl" alt="@product.Brand @product.Name"></svg>
+
+                    <div class="card-body">
+                        <h5>@product.Brand.ToUpper() @product.Name</h5>
+                        <p class="card-text">@ShortenDescription(product.Description)</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-secondary" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">View more</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        }
+            }
 
-
+        </div>
     </div>
-    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon bg-secondary" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon bg-secondary" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
 </div>
 
 <div>
     <div class="col-12 text-center">
-        <button class="btn btn-primary" id="statistics-button">Show Statistics</button>
+        <button class="btn btn-outline-secondary mt-3" id="statistics-button">Show Statistics</button>
     </div>
 </div>
 
