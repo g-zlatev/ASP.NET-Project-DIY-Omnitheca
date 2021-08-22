@@ -1,7 +1,8 @@
 ﻿namespace DiyOmnitheca.Services.Products
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using DiyOmnitheca.Data;
@@ -82,32 +83,11 @@
                 .ProjectTo<ProductDetailsServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefault();
 
-            //var borrower = this.data
-            //    .Borrowers
-            //    .Where(b => b.Id == product.BorrowerId)
-            //    .FirstOrDefault();
-
-            //if (borrower != null)
-            //{
-            //    var userBorrower = this.data
-            //    .Users
-            //    .Where(u => u.Id == borrower.UserId)
-            //    .FirstOrDefault();
-
-            //    product.BorrowerName = userBorrower.FullName;
-            //}
-
             var lenderId = this.data
                 .Lenders
                 .Where(l => l.Id == product.LenderId)
                 .Select(x => x.UserId)
                 .FirstOrDefault();
-
-            //var lenderName = this.data
-            //    .Lenders
-            //    .Where(l => l.Id == product.LenderId)
-            //    .Select(x => x.FullName)
-            //    .FirstOrDefault();
 
             if (lenderId != null)
             {
@@ -142,6 +122,35 @@
             return productData.Id;
         }
 
+        public bool Lend(int id, DateTime LendUntil, int borrowerId)
+        {
+            var productData = this.data
+                .Products
+                .Find(id);
+
+            if (productData == null)
+            {
+                return false;
+            }
+
+            var borrower = this.data.Borrowers.Find(borrowerId);
+
+            productData.BorrowedOnDate = DateTime.UtcNow.ToShortDateString();
+            productData.BorrowedUntilDate = LendUntil.ToShortDateString();
+            productData.BorrowerId = borrowerId;
+            productData.Borrower = borrower;
+
+            borrower.BorrowedProducts.Add(productData);
+
+            //var products = borrower.BorrowedProducts;
+            //products.Add(productData);
+
+            this.data.SaveChanges();
+
+            return true;
+        }
+
+
         public bool Edit(int id, string brand, string name, string description, string imageUrl, double lendingPrice, string location, int categoryId)
         {
             var productData = this.data
@@ -170,6 +179,12 @@
             => GetProducts(this.data
                 .Products
                 .Where(p => p.Lender.UserId == userId));
+
+
+        public IEnumerable<ProductDetailsServiceModel> MyBorrows(string userId)
+           => GetBorrowedProducts(this.data
+               .Products
+               .Where(p => p.Lender.UserId == userId));
 
 
         public bool IsByLender(int productId, int lenderId)
@@ -214,6 +229,25 @@
                     ImageUrl = p.ImageUrl,
                     LendingPrice = p.LendingPrice,
                     Location = p.Location
+                })
+                .ToList();
+
+        private static IEnumerable<ProductDetailsServiceModel> GetBorrowedProducts(IQueryable<Product> productQuery)
+            => productQuery
+                .Select(p => new ProductDetailsServiceModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Brand = p.Brand,
+                    Description = p.Description,
+                    CategoryName = p.Category.Name,
+                    ImageUrl = p.ImageUrl,
+                    LendingPrice = p.LendingPrice,
+                    Location = p.Location,
+                    BorrowerId = p.BorrowerId,
+                    LendFrom = p.BorrowedOnDate,
+                    LendUntil = p.BorrowedUntilDate,
+                    LenderId = p.LenderId
                 })
                 .ToList();
 

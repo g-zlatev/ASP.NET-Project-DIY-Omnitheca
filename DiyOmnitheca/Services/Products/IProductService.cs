@@ -1,5 +1,6 @@
 ﻿namespace DiyOmnitheca.Services.Products
 {
+    using System;
     using System.Collections.Generic;
     using DiyOmnitheca.Models;
     using DiyOmnitheca.Models.Products;
@@ -16,6 +17,8 @@
         IEnumerable<LatestProductServiceModel> Latest();
 
         ProductDetailsServiceModel Details(int productId);
+
+        bool Lend(int id, DateTime date, int borrowerId);
 
         int Create(
                 string brand,
@@ -38,6 +41,8 @@
                 int categoryId);
 
         IEnumerable<ProductServiceModel> OwnProducts(string userId);
+
+        IEnumerable<ProductDetailsServiceModel> MyBorrows(string userId);
 
         bool IsByLender(int productId, int lenderId);
 

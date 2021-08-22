@@ -6,19 +6,23 @@
     using DiyOmnitheca.Infrastructure;
     using DiyOmnitheca.Services.Products;
     using DiyOmnitheca.Services.Lenders;
+    using DiyOmnitheca.Services.Borrowers;
     using AutoMapper;
+    using System;
 
     public class ProductsController : Controller
     {
         private readonly IProductService products;
         private readonly ILenderService lenders;
         private readonly IMapper mapper;
+        private readonly IBorrowerService borrowers;
 
-        public ProductsController(IProductService products, ILenderService lenders, IMapper mapper)
+        public ProductsController(IProductService products, ILenderService lenders, IMapper mapper, IBorrowerService borrowers)
         {
             this.products = products;
             this.lenders = lenders;
             this.mapper = mapper;
+            this.borrowers = borrowers;
         }
 
 
@@ -64,6 +68,7 @@
             });
         }
 
+
         [HttpPost]
         [Authorize]
         public IActionResult Add(ProductFormModel product)
@@ -96,6 +101,36 @@
                 product.Location,
                 product.CategoryId,
                 lenderId);
+
+            return RedirectToAction(nameof(All));
+        }
+
+        [Authorize]
+        public IActionResult Lend(int id)
+        {
+            var product = this.products.Details(id);
+
+            if (!this.lenders.IsLender(this.User.GetId()) && !User.IsAdmin())
+            {
+                return RedirectToAction(nameof(BorrowersController.Become), "Borrowers");
+            }
+
+
+            return View(product);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Lend(int id, DateTime LendUntil)
+        {
+            var borrowerId = this.borrowers.IdByUser(this.User.GetId());
+
+            if (borrowerId == 0 && !User.IsAdmin())
+            {
+                return RedirectToAction(nameof(BorrowersController.Become), "Borrowers");
+            }
+
+            this.products.Lend(id, LendUntil, borrowerId);
 
             return RedirectToAction(nameof(All));
         }

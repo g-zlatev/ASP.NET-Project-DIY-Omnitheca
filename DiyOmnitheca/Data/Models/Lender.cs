@@ -20,6 +20,6 @@
         [Required]
         public string  UserId { get; set; }
 
-        public IEnumerable<Product> Products { get; init; } = new List<Product>();
+        public IEnumerable<Product> Products { get; set; } = new List<Product>();
     }
 }

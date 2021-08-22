@@ -3,6 +3,7 @@ namespace DiyOmnitheca
     using DiyOmnitheca.Data;
     using DiyOmnitheca.Data.Models;
     using DiyOmnitheca.Infrastructure;
+    using DiyOmnitheca.Services.Borrowers;
     using DiyOmnitheca.Services.Lenders;
     using DiyOmnitheca.Services.Products;
     using DiyOmnitheca.Services.Statistics;
@@ -52,6 +53,7 @@ namespace DiyOmnitheca
 
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ILenderService, LenderService>();
+            services.AddTransient<IBorrowerService, BorrowerService>();
             services.AddTransient<IStatisticsService, StatisticsService>();
         }
 

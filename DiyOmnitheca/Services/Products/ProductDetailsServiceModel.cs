@@ -1,4 +1,6 @@
-﻿namespace DiyOmnitheca.Services.Products
+﻿using System;
+
+namespace DiyOmnitheca.Services.Products
 {
     public class ProductDetailsServiceModel : ProductServiceModel
     {
@@ -6,9 +8,13 @@
 
         public string LenderName { get; set; }
 
-        public int BorrowerId { get; init; }
+        public int? BorrowerId { get; set; }
 
         public string BorrowerName { get; set; }
+
+        public string LendUntil { get; set; }
+
+        public string LendFrom { get; set; }
 
         public int CategoryId { get; init; }
 

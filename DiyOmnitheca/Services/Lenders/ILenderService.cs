@@ -4,6 +4,6 @@
     {
         public bool IsLender(string userId);
 
-        public int IdByUser(string UserId);
+        public int IdByUser(string userId);
     }
 }

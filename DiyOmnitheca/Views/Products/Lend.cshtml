@@ -13,21 +13,17 @@
     }
 }
 
-@*<div class="card" style="width: 18rem; outline-offset: 10px">
-    <img class="card-img-top" style="width: 100%; height: 10vw; object-fit: scale-down;" src="@Model.ImageUrl" alt="@Model.Brand @Model.Name">
-    <div class="card-body col-sm-12 col-md-12 col-lg-12" style="height: 10vw">
-        <h5 class="card-title">@Model.Brand @Model.Name</h5>
-        <p class="card-text d-sm-none d-md-block">@Model.Description</p>
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Category: @Model.CategoryName </li>
-        <li class="list-group-item">Location: @Model.Location</li>
-        <li class="list-group-item">Lending price: @Model.LendingPrice lv.</li>
-        <li class="list-group-item">Owner: @Model.LenderName </li>
-        <li class="list-group-item">Current borrower: @Model.BorrowerName</li>
-    </ul>
-</div>*@
-
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+    </script>
+}
 
 <section class="mb-5">
 
@@ -80,10 +76,16 @@
                         </tr>
                     </tbody>
                 </table>
+                @*<div class="pl-0 w-25" scope="row"><strong>Date</strong><input type="text" id="datepicker"></div>*@
+                <form method="post">
+                    <div class="pl-0 w-25" scope="row">
+                        <label asp-for="LendUntil">Lend until:</label>
+                        <input type="datetime" id="datepicker" name="LendUntil" asp-for="LendUntil" class="form-control" rows="3">
+                    </div>
+                    <input class="btn btn-primary btn-md mt-3 mr-1 mb-2" type="submit" value="Lend">
+                </form>
             </div>
             <hr>
-
-            <a asp-controller="Products" asp-action="Lend" asp-route-id="@Model.Id" class="btn btn-primary btn-md mr-1 mb-2">Lend now</a>
         </div>
     </div>
 </section>
