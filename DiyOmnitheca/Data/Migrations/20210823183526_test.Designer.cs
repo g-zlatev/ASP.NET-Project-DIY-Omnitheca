@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiyOmnitheca.Data.Migrations
 {
     [DbContext(typeof(OmnithecaDbContext))]
-    [Migration("20210823172646_AddPaymentInfoEntity")]
-    partial class AddPaymentInfoEntity
+    [Migration("20210823183526_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

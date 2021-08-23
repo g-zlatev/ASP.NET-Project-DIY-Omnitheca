@@ -1,0 +1,37 @@
+﻿@page
+@model DiyOmnitheca.Areas.Identity.Pages.Account.PaymentModel
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h4>Payment Information</h4>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.BankName"></label>
+                <input asp-for="Input.BankName" class="form-control" />
+                <span asp-validation-for="Input.BankName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Iban"></label>
+                <input asp-for="Input.Iban" class="form-control" />
+                <span asp-validation-for="Input.Iban" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Money"></label>
+                <input asp-for="Input.Money" class="form-control" />
+                <span asp-validation-for="Input.Money" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
