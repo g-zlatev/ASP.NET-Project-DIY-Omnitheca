@@ -30,16 +30,16 @@ namespace DiyOmnitheca.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Required]
-            [Display(Name = "New Bank Name")]
+            [Display(Name = "Bank Name")]
             [StringLength(BankNameMaxLength, MinimumLength = BankNameMinLength)]
             public string BankName { get; set; }
 
             [Required]
-            [Display(Name = "New IBAN")]
+            [Display(Name = "IBAN")]
             [StringLength(IbanMaxLength, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = IbanMinLength)]
             public string Iban { get; set; }
 
-            [Display(Name = "Add/Remove Money")]
+            [Display(Name = "Add Money")]
             public double Money { get; set; }
         }
 

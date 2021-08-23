@@ -9,21 +9,13 @@
 <div class="row">
     <div class="col-md-4 offset-md-4">
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Payment Information</h4>
+            <h4>Add Payment Information</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.BankName"></label>
-                <input asp-for="Input.BankName" class="form-control" disabled />
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.BankName"></label>
                 <input asp-for="Input.BankName" class="form-control" />
                 <span asp-validation-for="Input.BankName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Iban"></label>
-                <input asp-for="Input.Iban" class="form-control" disabled />
             </div>
             <div class="form-group">
                 <label asp-for="Input.Iban"></label>
@@ -32,14 +24,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Input.Money"></label>
-                <input asp-for="Input.Money" class="form-control" disabled/>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Money"></label>
                 <input asp-for="Input.Money" class="form-control" />
                 <span asp-validation-for="Input.Money" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary">Add</button>
+            <a class="btn btn-warning text-dark ml-3" asp-area="" asp-controller="Payment" asp-action="Edit">Edit</a>
         </form>
     </div>
 </div>
