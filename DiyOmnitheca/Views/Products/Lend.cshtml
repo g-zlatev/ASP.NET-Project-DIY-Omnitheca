@@ -20,7 +20,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         $(function () {
-            $("#datepicker").datepicker();
+            $("#datepicker").datepicker({ dateFormat: 'dd.mm.yy'});
         });
     </script>
 }
@@ -76,11 +76,10 @@
                         </tr>
                     </tbody>
                 </table>
-                @*<div class="pl-0 w-25" scope="row"><strong>Date</strong><input type="text" id="datepicker"></div>*@
                 <form method="post">
                     <div class="pl-0 w-25" scope="row">
                         <label asp-for="LendUntil">Lend until:</label>
-                        <input type="datetime" id="datepicker" name="LendUntil" asp-for="LendUntil" class="form-control" rows="3">
+                        <input type="text" id="datepicker" name="lendUntil" asp-for="LendUntil" class="form-control" rows="3">
                     </div>
                     <input class="btn btn-primary btn-md mt-3 mr-1 mb-2" type="submit" value="Lend">
                 </form>

@@ -50,7 +50,7 @@ namespace DiyOmnitheca.Controllers
             var borrowerData = new Borrower
             {
                 Address = borrower.Address,
-                PhoneNumber = borrower.Address,
+                PhoneNumber = borrower.PhoneNumber,
                 UserId = userId
             };
 

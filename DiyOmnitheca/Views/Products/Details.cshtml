@@ -1,33 +1,24 @@
 ﻿@model ProductDetailsServiceModel
 
+@using Microsoft.AspNetCore.Identity
+@using DiyOmnitheca.Data.Models
+
+@inject UserManager<User> UserManager
+@inject ILenderService Lenders
+@inject SignInManager<User> SignInManager
+
 @{
     ViewBag.Title = "Product Details";
 }
 
 @{
-    var borrowerName = "Noone is currently borrowing this product!";
+    var borrowerName = "No one is currently borrowing this product!";
 
     if (Model.BorrowerName != null)
     {
         borrowerName = Model.BorrowerName;
     }
 }
-
-@*<div class="card" style="width: 18rem; outline-offset: 10px">
-    <img class="card-img-top" style="width: 100%; height: 10vw; object-fit: scale-down;" src="@Model.ImageUrl" alt="@Model.Brand @Model.Name">
-    <div class="card-body col-sm-12 col-md-12 col-lg-12" style="height: 10vw">
-        <h5 class="card-title">@Model.Brand @Model.Name</h5>
-        <p class="card-text d-sm-none d-md-block">@Model.Description</p>
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Category: @Model.CategoryName </li>
-        <li class="list-group-item">Location: @Model.Location</li>
-        <li class="list-group-item">Lending price: @Model.LendingPrice lv.</li>
-        <li class="list-group-item">Owner: @Model.LenderName </li>
-        <li class="list-group-item">Current borrower: @Model.BorrowerName</li>
-    </ul>
-</div>*@
-
 
 <section class="mb-5">
 
@@ -60,30 +51,56 @@
             <p><span class="mr-1"><strong>Price per day: @Model.LendingPrice lv.</strong></span></p>
             <p class="pt-1">@Model.Description</p>
             <div class="table-responsive">
-                <table class="table table-sm table-borderless mb-0">
+                <table class="table table-sm table-borderless mb-0 table table-striped">
                     <tbody>
                         <tr>
-                            <th class="pl-0 w-25" scope="row"><strong>Category</strong></th>
+                            <th class="pl-0 w-25" scope="row"><strong>Category:</strong></th>
                             <td>@Model.CategoryName</td>
                         </tr>
                         <tr>
-                            <th class="pl-0 w-25" scope="row"><strong>Location</strong></th>
+                            <th class="pl-0 w-25" scope="row"><strong>Location:</strong></th>
                             <td>@Model.Location</td>
                         </tr>
                         <tr>
-                            <th class="pl-0 w-25" scope="row"><strong>Owner</strong></th>
+                            <th class="pl-0 w-25" scope="row"><strong>Lender:</strong></th>
                             <td>@Model.LenderName</td>
                         </tr>
                         <tr>
-                            <th class="pl-0 w-25" scope="row"><strong>Current borrower</strong></th>
+                            <th class="pl-0 w-25" scope="row"><strong>Current borrower:</strong></th>
                             <td>@borrowerName</td>
                         </tr>
+                        @if (Model.LendFrom != null)
+                        {
+                            <tr>
+                                <th class="pl-0 w-25" scope="row"><strong>Borrowed on:</strong></th>
+                                <td>@Model.LendFrom</td>
+                            </tr>
+                            <tr>
+                                <th class="pl-0 w-25" scope="row"><strong>Borrowed until:</strong></th>
+                                <td>@Model.LendUntil</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
             <hr>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                var userId = User.GetId();
+                var UserIsProductsLender = Lenders.IdByUser(userId) == Model.LenderId;
+                var userIsAdmin = User.IsAdmin();
 
-            <a asp-controller="Products" asp-action="Lend" asp-route-id="@Model.Id" class="btn btn-primary btn-md mr-1 mb-2">Lend now</a>
+                @if (!UserIsProductsLender && Model.BorrowerId == null)
+                {
+                    <a asp-controller="Products" asp-action="Lend" asp-route-id="@Model.Id" class="btn btn-primary btn-md mr-1 mb-2">Lend now</a>
+                }
+                else
+                {
+                    <h5 class="text-secondary">You can't lend this product!</h5>
+                    <a class="btn btn-primary my-2" asp-area="" asp-controller="Products" asp-action="All">View other products.</a>
+                }
+            }
+
         </div>
     </div>
 </section>

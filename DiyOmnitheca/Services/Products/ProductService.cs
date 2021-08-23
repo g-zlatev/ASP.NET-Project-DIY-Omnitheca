@@ -77,10 +77,31 @@
 
         public ProductDetailsServiceModel Details(int id)
         {
+            //var product = this.data
+            //    .Products
+            //    .Where(p => p.Id == id)
+            //    .ProjectTo<ProductDetailsServiceModel>(this.mapper.ConfigurationProvider)
+            //    .FirstOrDefault();
+
             var product = this.data
                 .Products
                 .Where(p => p.Id == id)
-                .ProjectTo<ProductDetailsServiceModel>(this.mapper.ConfigurationProvider)
+                .Select(p => new ProductDetailsServiceModel
+                {
+                    Id = p.Id,
+                    Description = p.Description,
+                    CategoryId = p.CategoryId,
+                    Brand = p.Brand,
+                    BorrowerId = p.BorrowerId,
+                    ImageUrl = p.ImageUrl,
+                    LenderId = p.LenderId,
+                    LendFrom = p.BorrowedOnDate,
+                    LendUntil = p.BorrowedUntilDate,
+                    LendingPrice = p.LendingPrice,
+                    Location = p.Location,
+                    Name = p.Name,
+                    CategoryName = p.Category.Name
+                })
                 .FirstOrDefault();
 
             var lenderId = this.data
@@ -89,13 +110,28 @@
                 .Select(x => x.UserId)
                 .FirstOrDefault();
 
+            var borrowerId = this.data
+                .Borrowers
+                .Where(l => l.Id == product.BorrowerId)
+                .Select(x => x.UserId)
+                .FirstOrDefault();
+
             if (lenderId != null)
             {
-                var lenderName = this.data
+                var lender = this.data
                 .Users
                 .Find(lenderId);
 
-                product.LenderName = lenderName.FullName;
+                product.LenderName = lender.FullName;
+            }
+
+            if (borrowerId != null)
+            {
+                var borrower = this.data
+                .Users
+                .Find(borrowerId);
+
+                product.BorrowerName = borrower.FullName;
             }
 
             return product;
@@ -122,7 +158,7 @@
             return productData.Id;
         }
 
-        public bool Lend(int id, DateTime LendUntil, int borrowerId)
+        public bool Lend(int id, string lendUntil, int borrowerId)
         {
             var productData = this.data
                 .Products
@@ -135,15 +171,12 @@
 
             var borrower = this.data.Borrowers.Find(borrowerId);
 
-            productData.BorrowedOnDate = DateTime.UtcNow.ToShortDateString();
-            productData.BorrowedUntilDate = LendUntil.ToShortDateString();
+            productData.BorrowedOnDate = DateTime.UtcNow.ToString("dd.MM.yyyy");
+            productData.BorrowedUntilDate = lendUntil;
             productData.BorrowerId = borrowerId;
             productData.Borrower = borrower;
 
             borrower.BorrowedProducts.Add(productData);
-
-            //var products = borrower.BorrowedProducts;
-            //products.Add(productData);
 
             this.data.SaveChanges();
 

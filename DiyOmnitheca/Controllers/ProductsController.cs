@@ -110,18 +110,17 @@
         {
             var product = this.products.Details(id);
 
-            if (!this.lenders.IsLender(this.User.GetId()) && !User.IsAdmin())
+            if (!this.borrowers.IsBorrower(this.User.GetId()) && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(BorrowersController.Become), "Borrowers");
             }
-
 
             return View(product);
         }
 
         [HttpPost]
         [Authorize]
-        public IActionResult Lend(int id, DateTime LendUntil)
+        public IActionResult Lend(int id, string lendUntil)
         {
             var borrowerId = this.borrowers.IdByUser(this.User.GetId());
 
@@ -130,7 +129,7 @@
                 return RedirectToAction(nameof(BorrowersController.Become), "Borrowers");
             }
 
-            this.products.Lend(id, LendUntil, borrowerId);
+            this.products.Lend(id, lendUntil, borrowerId);
 
             return RedirectToAction(nameof(All));
         }

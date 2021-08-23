@@ -18,7 +18,7 @@
 
         ProductDetailsServiceModel Details(int productId);
 
-        bool Lend(int id, DateTime date, int borrowerId);
+        bool Lend(int id, string lendUntil, int borrowerId);
 
         int Create(
                 string brand,
