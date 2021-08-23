@@ -1,5 +1,5 @@
 ﻿@page
-@model DiyOmnitheca.Areas.Identity.Pages.Account.PaymentModel
+@model DiyOmnitheca.Areas.Identity.Pages.Account.Manage.PaymentModel
 @{
     ViewData["Title"] = "Payment";
 }
@@ -14,13 +14,25 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.BankName"></label>
+                <input asp-for="Input.BankName" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.BankName"></label>
                 <input asp-for="Input.BankName" class="form-control" />
                 <span asp-validation-for="Input.BankName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Iban"></label>
+                <input asp-for="Input.Iban" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Iban"></label>
                 <input asp-for="Input.Iban" class="form-control" />
                 <span asp-validation-for="Input.Iban" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Money"></label>
+                <input asp-for="Input.Money" class="form-control" disabled/>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Money"></label>
@@ -33,5 +45,5 @@
 </div>
 
 @section Scripts {
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
