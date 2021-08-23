@@ -34,5 +34,11 @@ namespace DiyOmnitheca.Data
             public const int PasswordMaxLength = 100;
         }
 
+        public class Payment
+        {
+            public const int IbanMaxLength = 34;
+            public const int BankNameMaxLength = 50;
+        }
+
     }
 }

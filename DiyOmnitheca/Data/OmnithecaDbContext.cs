@@ -20,6 +20,8 @@
 
         public DbSet<Borrower> Borrowers { get; init; }
 
+        public DbSet<PaymentInfo> PaymentInfos { get; init; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
@@ -69,6 +71,13 @@
                 .HasOne(p => p.Borrower)
                 .WithMany(b => b.BorrowedProducts)
                 .HasForeignKey(p => p.BorrowerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<PaymentInfo>()
+                .HasOne<User>()
+                .WithOne()
+                .HasForeignKey<PaymentInfo>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

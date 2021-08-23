@@ -10,5 +10,6 @@
         [MaxLength(PersonFullNameMaxLength)]
         public string FullName { get; set; }
 
+        public PaymentInfo PaymentInfo { get; set; }
     }
 }
