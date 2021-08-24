@@ -26,9 +26,9 @@
 
             if (payment == null)
             {
-                RedirectToAction("Payment", "Manage", new { area = "Identity/Account" });
+                RedirectToAction("Index", "Manage", new { area = "Identity/Account" });
             }
-
+            //asp-area="Identity" asp-page="/Account/Manage/Payment"
             if (payment.UserId != userId)
             {
                 return Unauthorized();

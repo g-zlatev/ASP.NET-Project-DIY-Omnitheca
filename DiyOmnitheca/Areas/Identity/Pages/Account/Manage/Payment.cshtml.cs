@@ -8,7 +8,6 @@ namespace DiyOmnitheca.Areas.Identity.Pages.Account.Manage
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Threading.Tasks;
     using static Data.DataConstants.Payment;
 
     [Authorize]
@@ -26,6 +25,8 @@ namespace DiyOmnitheca.Areas.Identity.Pages.Account.Manage
         public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        public bool HasPayment { get; set; }
 
         public class InputModel
         {
@@ -45,10 +46,13 @@ namespace DiyOmnitheca.Areas.Identity.Pages.Account.Manage
 
         public void OnGet(string returnUrl = null)
         {
+            var userHaspayment = this.data.PaymentInfos.Any(p => p.UserId == this.User.GetId());
+            HasPayment = userHaspayment;
+
             ReturnUrl = returnUrl;
         }
 
-        public IActionResult OnPost(int id, string returnUrl = null)
+        public IActionResult OnPost(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
@@ -59,7 +63,6 @@ namespace DiyOmnitheca.Areas.Identity.Pages.Account.Manage
                    .Where(l => l.Id == this.User.GetId())
                    .Select(l => l.Id)
                    .FirstOrDefault();
-
 
                 var bankInfo = new PaymentInfo
                 {
@@ -73,7 +76,6 @@ namespace DiyOmnitheca.Areas.Identity.Pages.Account.Manage
                 this.data.SaveChanges();
 
                 return LocalRedirect(returnUrl);
-
             }
 
             // If we got this far, something failed, redisplay form
