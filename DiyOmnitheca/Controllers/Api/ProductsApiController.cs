@@ -2,8 +2,10 @@
 {
     using DiyOmnitheca.Models.Api.Products;
     using DiyOmnitheca.Services.Products;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     [ApiController]
     [Route("api/products")]
     public class ProductsApiController : ControllerBase
