@@ -1,0 +1,86 @@
+﻿<h3>User Info Panel</h3>
+
+@section Scripts {
+<script>
+    $('#show-users-button').on('click', e => {
+
+        //$.get('api/users', (data) => {
+        //    $('#total-products').text();
+
+        //})
+
+        $('#user-card').toggleClass("d-none");
+    });
+
+</script>
+}
+
+<script>
+    const url = 'https://localhost:5001/api/users';
+
+    async function getData() {
+        const response = await fetch(url);
+        const data = await response.json();
+
+
+        data.forEach(element => {
+
+            let { id, email, fullName, isLender, isBorrower, hasPaymentInfo, borrowedProducts, ownProducts} = element;
+            let container = document.getElementById("userCardMain");
+            console.log(id);
+            console.log(email);
+             console.log(fullName);
+            console.log(borrowedProducts);
+             console.log(ownProducts);
+
+            let codeBlock = '<div class="panel widget" id="user-card">' +
+                                '<div class="panel-body bg-danger text-center">' +
+                                    `<h4 class="mt0">Full Name: ${fullName}</h4>` +
+                                        '<div class="clearfix">'+
+                                        `<div class="pull-right">Email: ${email}</div>` +
+                                        `<div class="pull-right">Id: ${id}</div>` +
+                                        '</div>'+
+                                        '<div class="clearfix">'+
+                                            `<div class="pull-left">User is Lender: ${isLender}</div>` +
+                                            `<div class="pull-right">User is Borrower: ${isBorrower}</div>` +
+                                            `<div class="pull-right">User has payment info: ${hasPaymentInfo}</div>` +
+                                        '</div>' +
+                                '</div>' +
+                                '</div >' +
+                                   '<br>';
+
+            container.innerHTML += codeBlock;
+        });
+
+    };
+
+    getData();
+
+</script>
+
+
+
+<div id="topContainer">
+    <div class="col-md-4" id="userCardMain">
+        @*<div class="panel widget" id="user-card">
+            <div class="panel-body bg-danger text-center">
+                <h4 class="mt0">fullName</h4>
+                <div class="clearfix">
+                    <div class="pull-right">id</div>
+                </div>
+                <p class="m0">
+                    <em class="fa fa-fw fa-map-marker"></em>email
+                </p>
+                <div class="clearfix">
+                    <div class="pull-left">isLender</div>
+                    <div class="pull-right">isBorrower</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 text-center">
+            <button class="btn btn-outline-secondary mt-3" id="show-users-button">Show Users</button>
+        </div>*@
+    </div>
+</div>
+
+
