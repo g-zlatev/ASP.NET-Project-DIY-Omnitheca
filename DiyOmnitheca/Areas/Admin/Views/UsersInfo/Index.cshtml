@@ -1,13 +1,8 @@
-﻿<h3>User Info Panel</h3>
+﻿<h3 class="pb-4 text-center">User Info Panel</h3>
 
 @section Scripts {
 <script>
     $('#show-users-button').on('click', e => {
-
-        //$.get('api/users', (data) => {
-        //    $('#total-products').text();
-
-        //})
 
         $('#user-card').toggleClass("d-none");
     });
@@ -27,14 +22,12 @@
 
             let { id, email, fullName, isLender, isBorrower, hasPaymentInfo, borrowedProducts, ownProducts} = element;
             let container = document.getElementById("userCardMain");
-            console.log(id);
-            console.log(email);
              console.log(fullName);
             console.log(borrowedProducts);
              console.log(ownProducts);
 
-            let codeBlock = '<div class="panel widget" id="user-card">' +
-                                '<div class="panel-body bg-danger text-center">' +
+            let codeBlock = '<div class="panel widget ml-3 mr-3 mb-3" id="user-card">' +
+                                '<div class="panel-body bg-warning text-center">' +
                                     `<h4 class="mt0">Full Name: ${fullName}</h4>` +
                                         '<div class="clearfix">'+
                                         `<div class="pull-right">Email: ${email}</div>` +
@@ -61,7 +54,7 @@
 
 
 <div id="topContainer">
-    <div class="col-md-4" id="userCardMain">
+    <div class="row" id="userCardMain">
         @*<div class="panel widget" id="user-card">
             <div class="panel-body bg-danger text-center">
                 <h4 class="mt0">fullName</h4>
