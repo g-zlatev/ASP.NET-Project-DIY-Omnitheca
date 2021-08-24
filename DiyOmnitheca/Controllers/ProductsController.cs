@@ -152,9 +152,11 @@
                 return RedirectToAction(nameof(LendersController.Become), "Lenders");
             }
 
+            var lenderId = this.lenders.IdByUser(userId);
+
             var product = this.products.Details(id);
 
-            if (product.UserId != userId && !User.IsAdmin())
+            if (product.LenderId != lenderId && !User.IsAdmin())
             {
                 return Unauthorized();
             }
