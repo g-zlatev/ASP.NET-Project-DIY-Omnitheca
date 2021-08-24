@@ -180,6 +180,8 @@
 
             this.data.SaveChanges();
 
+            var test = borrower.BorrowedProducts;
+
             return true;
         }
 

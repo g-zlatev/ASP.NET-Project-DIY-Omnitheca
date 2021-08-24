@@ -1,4 +1,6 @@
-﻿namespace DiyOmnitheca.Areas.Admin.Models
+﻿using System.Collections.Generic;
+
+namespace DiyOmnitheca.Areas.Admin.Models
 {
     public class UserApiModel
     {
@@ -12,6 +14,9 @@
 
         public bool IsBorrower { get; init; }
 
-        public bool HasPaymentInfo { get; init; } 
+        public bool HasPaymentInfo { get; init; }
+
+        public IEnumerable<ProductApiModel> OwnProducts { get; set; } = new List<ProductApiModel>();
+        public IEnumerable<ProductApiModel> BorrowedProducts { get; set; } = new List<ProductApiModel>();
     }
 }

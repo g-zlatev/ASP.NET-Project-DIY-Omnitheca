@@ -16,7 +16,7 @@
 
         private readonly OmnithecaDbContext data;
 
-        public UsersApiController(OmnithecaDbContext data) 
+        public UsersApiController(OmnithecaDbContext data)
             => this.data = data;
 
         [HttpGet]
@@ -33,6 +33,44 @@
                 HasPaymentInfo = this.data.PaymentInfos.Any(p => p.UserId == u.Id)
             })
                 .ToList();
+
+            foreach (var user in users)
+            {
+                var borrower = this.data.Borrowers.Where(u => u.UserId == user.Id).FirstOrDefault();
+                if (borrower != null)
+                {
+                    user.BorrowedProducts = this.data.Products.Where(p => p.BorrowerId == borrower.Id).Select(p => new ProductApiModel
+                    {
+                        Id = p.Id,
+                        Brand = p.Brand,
+                        Description = p.Description,
+                        ImageUrl = p.ImageUrl,
+                        LendOn = p.BorrowedOnDate,
+                        LendUntil = p.BorrowedUntilDate,
+                        Location = p.Location,
+                        Name = p.Name,
+                        Price = p.LendingPrice
+                    });
+                }
+
+                var lender = this.data.Lenders.Where(u => u.UserId == user.Id).FirstOrDefault();
+                if (lender != null)
+                {
+                    user.OwnProducts = this.data.Products.Where(p => p.LenderId == lender.Id).Select(p => new ProductApiModel
+                    {
+                        Id = p.Id,
+                        Brand = p.Brand,
+                        Description = p.Description,
+                        ImageUrl = p.ImageUrl,
+                        LendOn = p.BorrowedOnDate,
+                        LendUntil = p.BorrowedUntilDate,
+                        Location = p.Location,
+                        Name = p.Name,
+                        Price = p.LendingPrice
+                    });
+                }
+
+            }
 
             return users;
         }
